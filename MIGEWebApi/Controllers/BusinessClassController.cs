@@ -29,8 +29,8 @@ namespace MIGEWebApi.Controllers
         [Route("api/BusinessClass")]
         [Produces("application/json")]
         //[Authorize("MIGEAuthorize")] // <--custom policy to implement
-        //[Authorize(Roles = "Admin")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [EnableCors("MyPolicy")]
         public JsonResult Get()
         {
