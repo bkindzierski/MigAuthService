@@ -16,8 +16,7 @@ using RagAppGuide.DAL.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
-
+using Newtonsoft.Json.Serialization;
 
 namespace MIGEWebApi.Controllers
 {
@@ -29,8 +28,8 @@ namespace MIGEWebApi.Controllers
         [Route("api/BusinessClass")]
         [Produces("application/json")]
         //[Authorize("MIGEAuthorize")] // <--custom policy to implement
-        [Authorize(Roles = "Admin")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [EnableCors("MyPolicy")]
         public JsonResult Get()
         {
@@ -77,12 +76,17 @@ namespace MIGEWebApi.Controllers
         [Route("api/ProxyPostCall")]
         [Produces("application/json")]
         //[Authorize("MIGEAuthorize")] // <--custom policy to implement
-        [Authorize(Roles = "Admin")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [EnableCors("MyPolicy")]
-        public IActionResult postNewBusinessClass([FromBody] DWXF710 postdata)
+        //public IActionResult postNewBusinessClass([FromBody] DWXF710 postdata)
+        public JsonResult postNewBusinessClass([FromBody] DWXF710 postdata)
         {
-            
+
+            JsonSerializerSettings settings = new JsonSerializerSettings(); //{ Formatting = Formatting.Indented };
+            settings.ContractResolver = new UppercaseContractResolver();
+            string json = JsonConvert.SerializeObject(postdata, Formatting.Indented, settings);
+
             //nhibernate connect 
             NHibernateSession nh = new NHibernateSession();
             var sessionFactory = nh.session;
@@ -102,16 +106,24 @@ namespace MIGEWebApi.Controllers
                 conn.Commit();
             }
 
-
             if (BusinessClass != null){
                 //return Ok(200);
-                return Json(BusinessClass);
+                return Json(BusinessClass, settings);
+                //return new OkObjectResult(BusinessClass);
             }
             else {
-                return NotFound();
+                return null;
             }
 
 
+        }
+
+        public class UppercaseContractResolver : DefaultContractResolver
+        {
+            protected override string ResolvePropertyName(string propertyName)
+            {
+                return propertyName.ToUpper();
+            }
         }
 
     }
