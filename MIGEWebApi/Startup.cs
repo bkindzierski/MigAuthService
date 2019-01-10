@@ -90,6 +90,10 @@ namespace MIGEWebApi
             //Add the AuthenticationMiddleware to the pipeline
             app.UseAuthentication();
             app.UseMvc();
+
+            //
+            HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
+
         }
     }
 

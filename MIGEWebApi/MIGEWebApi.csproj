@@ -22,6 +22,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
     <PackageReference Include="NHibernate" Version="5.1.1" />
+    <PackageReference Include="PDFsharp" Version="1.32.3057" />
     
   </ItemGroup>
 
@@ -34,6 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="HibernatingRhinos.Profiler.Appender">
+      <HintPath>..\..\..\Users\KINDZIEB\Downloads\NHibernate.Profiler-v5.0-Build-5023\Appender\net46\HibernatingRhinos.Profiler.Appender.dll</HintPath>
+    </Reference>
     <Reference Include="IBM.Data.DB2.iSeries">
       <HintPath>..\..\..\Program Files (x86)\IBM\Client Access\IBM.Data.DB2.iSeries.dll</HintPath>
     </Reference>
