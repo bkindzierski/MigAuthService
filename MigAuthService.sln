@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RagAppGuideApi", "RagAppGui
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RagAppGuide.DAL", "RagAppGuide.DAL\RagAppGuide.DAL.csproj", "{E2223EBD-E6A3-4357-B060-4448353FFAAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIGEWebApi", "MIGEWebApi\MIGEWebApi.csproj", "{A83C3E04-C3CB-4EA7-9BAE-6251237E34FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MIGEWebApi", "MIGEWebApi\MIGEWebApi.csproj", "{A83C3E04-C3CB-4EA7-9BAE-6251237E34FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
