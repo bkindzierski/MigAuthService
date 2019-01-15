@@ -19,24 +19,12 @@ namespace RagAppGuide.DAL.Mappings
             Id(x => x.CLASX);
             //Id(x => x.CLSSEQ);
             //Id(x => x.EFFDTE);
-            //Id(x => x.RCDID);
-
+            Id(x => x.RCDID);
             Map(x => x.PRMSTE);
             Map(x => x.DESC);
             Map(x => x.CLASX);
-            //Map(x => x.CLSSEQ);
-            //Map(x => x.EFFDTE);
-            //Map(x => x.ENDDTE);
-            //Map(x => x.RNWEFF);
-            //Map(x => x.RNWEXP);
-            //Map(x => x.WEBCLS);
-            //Map(x => x.REFDSC);
-            //Map(x => x.REFCLS);
-            //Map(x => x.REFSEQ);
             Map(x => x.MAPCLS);
-            //Map(x => x.AUTCLS);
-            //Map(x => x.COVCLS);
-            //Map(x => x.SICCDE);
+            Map(x => x.AUTCLS);
             Map(x => x.MAPMS);
             Map(x => x.AUTMS);
             Map(x => x.COVMS);
@@ -48,6 +36,18 @@ namespace RagAppGuide.DAL.Mappings
             Map(x => x.CAUTDSR);
             Map(x => x.COVDSR);
             Map(x => x.CUPDSR);
+
+            //Map(x => x.CLSSEQ);
+            //Map(x => x.EFFDTE);
+            //Map(x => x.ENDDTE);
+            //Map(x => x.RNWEFF);
+            //Map(x => x.RNWEXP);
+            //Map(x => x.WEBCLS);
+            //Map(x => x.REFDSC);
+            //Map(x => x.REFCLS);
+            //Map(x => x.REFSEQ);
+            //Map(x => x.COVCLS);
+            //Map(x => x.SICCDE);
             //Map(x => x.MAPCMT);
             //Map(x => x.AUTCMT);
             //Map(x => x.PROPCMT);

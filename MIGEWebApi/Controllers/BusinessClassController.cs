@@ -14,7 +14,9 @@ using RagAppGuide.DAL.Models;
 
 //
 using MigraDoc;
+using PdfSharp;
 using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 using PdfSharp.Drawing;
 
 using MigraDoc.Rendering;
@@ -25,7 +27,7 @@ using MigraDoc.DocumentObjectModel.Tables;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json.Serialization;
-using PdfSharp;
+
 
 namespace MIGEWebApi.Controllers
 {
@@ -66,22 +68,24 @@ namespace MIGEWebApi.Controllers
                 //perform db logic
                 BusinessClassList = (from DWXF710 in session.Query<DWXF710>()
                                          //where DWXF710.CLASX == "013930"
-                                     where DWXF710.PRMSTE == "20"
+                                     where DWXF710.PRMSTE == "20" 
                                      select new DWXF710 {
-                                            PRMSTE = DWXF710.PRMSTE,
-                                            DESC = DWXF710.DESC,
-                                            CLASX = DWXF710.CLASX,
-                                            MAPCLS = DWXF710.MAPCLS,
-                                            MAPMS = DWXF710.MAPMS,
-                                            MAPDSR = DWXF710.MAPDSR,
-                                            AUTDSR = DWXF710.AUTDSR,
+                                            PRMSTE  = DWXF710.PRMSTE,
+                                            DESC    = DWXF710.DESC,
+                                            CLASX   = DWXF710.CLASX,
+                                            MAPCLS  = DWXF710.MAPCLS,
+                                            AUTCLS = DWXF710.AUTCLS,
+                                            MAPMS   = DWXF710.MAPMS,
+                                            MAPDSR  = DWXF710.MAPDSR,
+                                            AUTDSR  = DWXF710.AUTDSR,
                                             PROPDSR = DWXF710.PROPDSR,
-                                            GLDSR = DWXF710.GLDSR,
-                                            WCDSR = DWXF710.WCDSR,
+                                            GLDSR   = DWXF710.GLDSR,
+                                            WCDSR   = DWXF710.WCDSR,
                                             CAUTDSR = DWXF710.CAUTDSR,
-                                            COVDSR = DWXF710.COVDSR,
-                                            CUPDSR = DWXF710.CUPDSR
-                                       }).Take(50).ToList();
+                                            COVDSR  = DWXF710.COVDSR,
+                                            CUPDSR  = DWXF710.CUPDSR,
+                                            RCDID   = DWXF710.RCDID
+                                       }).Take(100).ToList();
                 conn.Commit();
             }
 
@@ -108,6 +112,32 @@ namespace MIGEWebApi.Controllers
                 pdf.Info.Title = "Merchants Appetite Guide";
 
                 string pdfFilename = "MerchantsAppetiteGuide.pdf";
+
+                XFont font = new XFont("Verdana", 10, XFontStyle.Bold);
+                XStringFormat format = new XStringFormat();
+                format.Alignment = XStringAlignment.Center;
+                format.LineAlignment = XLineAlignment.Far;
+                XGraphics gfx;
+                XRect box;
+                PdfDocument inputDocument1 = PdfReader.Open("pdf/RAG-Quick_Reference_All.pdf", PdfDocumentOpenMode.Import);
+
+                PdfPage page1 = inputDocument1.Pages[0];
+                PdfPage page2 = inputDocument1.Pages[1];
+
+                //output document
+                page1 = pdf.AddPage(page1);
+                page2 = pdf.AddPage(page2);
+
+                // Write document file name and page number on each page
+                gfx = XGraphics.FromPdfPage(page1);
+                //box = page1.MediaBox.ToXRect();
+                //box.Inflate(0, -10);
+                //gfx.DrawString(String.Format("{0} • {1}", pdfFilename, 0),font, XBrushes.Red, box, format);
+
+                gfx = XGraphics.FromPdfPage(page2);
+                //box = page2.MediaBox.ToXRect();
+                //box.Inflate(0, -10);
+                //gfx.DrawString(String.Format("{0} • {1}", pdfFilename, 1),font, XBrushes.Red, box, format);
 
                 TableBuilder(pdf, BusinessClassList);
                 //MultipePagesSample(pdf);
@@ -288,7 +318,7 @@ namespace MIGEWebApi.Controllers
                     row.Cells[3].AddParagraph((bc.AUTCLS == null) ? "" : bc.AUTCLS);
                     row.Cells[3].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[4].AddParagraph((bc.AUTMS == null) ? "" : bc.AUTMS);
+                    row.Cells[4].AddParagraph((bc.MAPMS == null) ? "" : bc.MAPMS);
                     row.Cells[4].Format.Alignment = ParagraphAlignment.Center;
 
                     row.Cells[5].AddParagraph((bc.MAPDSR == null) ? "" : bc.MAPDSR);
@@ -327,88 +357,12 @@ namespace MIGEWebApi.Controllers
                 docRenderer.RenderObject(gfx, XUnit.FromCentimeter(1), XUnit.FromCentimeter(1), "12cm", table);
 
                 table.SetEdge(0, 0, 12, 1, Edge.Box, BorderStyle.Single, 0.55, Color.Empty);
-            }
-            
-
-
-
-
-            //var _rowcount = BusinessClassList.Count();
-            //var pages = _rowcount / 25;
-
-            ////
-            //foreach (var bclass in BusinessClassList)
-            //{
-
-            //    row = table.AddRow();
-            //    row.Format.Font.Bold = false;
-            //    row.Format.Font.Size = 7;
-
-            //    if (row.Index % 2 != 0)
-            //    {
-            //        row.Shading.Color = TableGrey;
-            //    }
-
-            //    row.Cells[0].AddParagraph(bclass.DESC);
-            //    row.Cells[0].Format.Alignment = ParagraphAlignment.Left;
-
-            //    row.Cells[1].AddParagraph(bclass.MAPCLS);
-            //    row.Cells[1].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[2].AddParagraph(bclass.CLASX);
-            //    row.Cells[2].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[3].AddParagraph((bclass.AUTCLS == null) ? "" : bclass.AUTCLS);
-            //    row.Cells[3].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[4].AddParagraph((bclass.AUTMS == null) ? "" : bclass.AUTMS);
-            //    row.Cells[4].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[5].AddParagraph((bclass.MAPDSR == null) ? "" : bclass.MAPDSR);
-            //    row.Cells[5].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[6].AddParagraph((bclass.AUTDSR == null) ? "" : bclass.AUTDSR);
-            //    row.Cells[6].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[7].AddParagraph((bclass.PROPDSR == null) ? "" : bclass.PROPDSR);
-            //    row.Cells[7].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[8].AddParagraph((bclass.GLDSR == null) ? "" : bclass.GLDSR);
-            //    row.Cells[8].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[9].AddParagraph((bclass.WCDSR == null) ? "" : bclass.WCDSR);
-            //    row.Cells[9].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[10].AddParagraph((bclass.CAUTDSR == null) ? "" : bclass.CAUTDSR);
-            //    row.Cells[10].Format.Alignment = ParagraphAlignment.Center;
-
-            //    row.Cells[11].AddParagraph((bclass.CUPDSR == null) ? "" : bclass.CUPDSR);
-            //    row.Cells[11].Format.Alignment = ParagraphAlignment.Left;                  
-            //}
-
-
-            //for (int pg = 0; pg < pages; ++pg)
-            //{
-
-            //    page = document.AddPage();
-            //    gfx = XGraphics.FromPdfPage(page);
-            //    gfx.MUH = PdfFontEncoding.Unicode;
-
-            //    // Create a renderer and prepare (=layout) the document
-            //    MigraDoc.Rendering.DocumentRenderer docRenderer = new DocumentRenderer(doc);
-            //    docRenderer.PrepareDocument();
-
-            //    // Render the paragraph. You can render tables or shapes the same way.
-            //    docRenderer.RenderObject(gfx, XUnit.FromCentimeter(1), XUnit.FromCentimeter(1), "12cm", table);
-
-            //}
-
-
+            }            
 
         }
 
-        // **  **  **  **  **  **  **  **  ** 
-        public static IEnumerable<List<T>>SplitList<T>(List<T> businessclasses, int nSize = 10)
+        // ** chunk size here determines the number of pages ** 
+        public static IEnumerable<List<T>>SplitList<T>(List<T> businessclasses, int nSize = 35)
         {
             for (int i = 0; i < businessclasses.Count; i += nSize)
             {

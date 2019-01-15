@@ -38,22 +38,12 @@ namespace RagAppGuide.DAL.Models
         }
         [DataMember]
         public virtual string CLASX { get; set; }
-        //public virtual string CLSSEQ { get; set; }
-        //public virtual Int32 EFFDTE { get; set; }
-        //public virtual Int32 ENDDTE { get; set; }
-        //public virtual Int32 RNWEFF { get; set; }
-        //public virtual Int32 RNWEXP { get; set; }
-        //public virtual string WEBCLS { get; set; }
-        //public virtual string REFDSC { get; set; }
-        //public virtual string REFCLS { get; set; }
-        //public virtual string REFSEQ { get; set; }
         [DataMember]
         public virtual string MAPCLS { get; set; }
         [DataMember]
         public virtual string AUTCLS { get; set; }
         [DataMember]
         public virtual string COVCLS { get; set; }
-        //public virtual string SICCDE { get; set; }
         [DataMember]
         public virtual string MAPMS { get; set; }
         public virtual string AUTMS { get; set; }
@@ -74,7 +64,17 @@ namespace RagAppGuide.DAL.Models
         public virtual string COVDSR { get; set; }
         [DataMember]
         public virtual string CUPDSR { get; set; }
-       
+
+        //public virtual string SICCDE { get; set; }
+        //public virtual string CLSSEQ { get; set; }
+        //public virtual Int32 EFFDTE { get; set; }
+        //public virtual Int32 ENDDTE { get; set; }
+        //public virtual Int32 RNWEFF { get; set; }
+        //public virtual Int32 RNWEXP { get; set; }
+        //public virtual string WEBCLS { get; set; }
+        //public virtual string REFDSC { get; set; }
+        //public virtual string REFCLS { get; set; }
+        //public virtual string REFSEQ { get; set; }
         //public virtual string MAPCMT { get; set; }
         //public virtual string AUTCMT { get; set; }
         //public virtual string PROPCMT { get; set; }
@@ -85,7 +85,8 @@ namespace RagAppGuide.DAL.Models
         //public virtual string CUPCMT { get; set; }
         //public virtual string SPCTYP { get; set; }
         //public virtual Int32 CLSDED { get; set; }
-        //public virtual Int32 RCDID { get; set; }
+        [DataMember]
+        public virtual Int32 RCDID { get; set; }
 
         
     }
