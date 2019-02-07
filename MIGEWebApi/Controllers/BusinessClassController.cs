@@ -140,7 +140,7 @@ namespace MIGEWebApi.Controllers
                 //gfx.DrawString(String.Format("{0} • {1}", pdfFilename, 1),font, XBrushes.Red, box, format);
 
                 TableBuilder(pdf, BusinessClassList);
-                //MultipePagesSample(pdf);
+                
 
                 pdf.Save(pdfFilename);              
 
@@ -151,45 +151,6 @@ namespace MIGEWebApi.Controllers
                 throw ex;
             }
         }
-
-
-        public void MultipePagesSample(PdfDocument document)
-        {
-
-            // Sample uses DIN A4, page height is 29.7 cm. We use margins of 2.5 cm.
-            LayoutHelper helper = new LayoutHelper(document, XUnit.FromCentimeter(2.5), XUnit.FromCentimeter(29.7 - 2.5));
-            XUnit left = XUnit.FromCentimeter(2.5);
-
-            // Random generator with seed value, so created document will always be the same.
-            Random rand = new Random(42);
-
-            const int headerFontSize = 20;
-            const int normalFontSize = 10;
-
-            XFont fontHeader = new XFont("Verdana", headerFontSize, XFontStyle.BoldItalic);
-            XFont fontNormal = new XFont("Verdana", normalFontSize, XFontStyle.Regular);
-
-            const int totalLines = 666;
-            bool washeader = false;
-            for (int line = 0; line < totalLines; ++line)
-            {
-                bool isHeader = line == 0 || !washeader && line < totalLines - 1 && rand.Next(15) == 0;
-                washeader = isHeader;
-                // We do not want a single header at the bottom of the page, so if we have a header we require space for header and a normal text line.
-                XUnit top = helper.GetLinePosition(isHeader ? headerFontSize + 5 : normalFontSize + 2, isHeader ? headerFontSize + 5 + normalFontSize : normalFontSize);
-
-                helper.Gfx.DrawString(isHeader ? "Sed massa libero, semper a nisi nec" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                    isHeader ? fontHeader : fontNormal, XBrushes.Black, left, top, XStringFormats.TopLeft);
-            }
-
-            // Save the document... 
-            const string filename = "MultiplePages.pdf";
-            document.Save(filename);
-
-        }
-
-       
-
         
 
         static void TableBuilder(PdfDocument document, List<DWXF710> BusinessClassList)
@@ -210,8 +171,18 @@ namespace MIGEWebApi.Controllers
             Color TableHeaderColor = new Color(255, 255, 255);
             Color TableGrey = new Color(217, 217, 217);
 
-            doc.LastSection.AddParagraph("Simple Tables", "Heading2");
-           
+            //center the table on the page
+            //doc.LastSection.AddParagraph("Simple Tables", "Heading2");
+            //TextFrame addressFrame;
+            //addressFrame = section.AddTextFrame();
+            //addressFrame.LineFormat.Width = 0.5; //Only for visual purposes 
+            //addressFrame.Height = "15.0cm";//any number 
+            //addressFrame.Width = "10.0cm";//sum of col widths 
+            //addressFrame.Left = ShapePosition.Center;
+            //addressFrame.RelativeHorizontal = RelativeHorizontal.Margin;//irrelevant 
+            //addressFrame.Top = "10.0cm";//irrelevant 
+            //addressFrame.RelativeVertical = RelativeVertical.Page;//irrelevant 
+            //Table table = addressFrame.AddTable();
 
             //
             var datachunks = SplitList(BusinessClassList);
@@ -224,43 +195,52 @@ namespace MIGEWebApi.Controllers
                 table.Borders.Width = 0.25;
                 table.Borders.Left.Width = 0.5;
                 table.Borders.Right.Width = 0.5;
-                table.Rows.LeftIndent = 10;
+                table.Rows.LeftIndent = "10cm";
+
+                //section.PageSetup = doc.DefaultPageSetup.Clone();
+                //var tableWidth = Unit.FromCentimeter(1);
+                //table.AddColumn(tableWidth);
+                //var leftIndentToCenterTable = (section.PageSetup.PageWidth.Centimeter -
+                //                               section.PageSetup.LeftMargin.Centimeter -
+                //                               section.PageSetup.RightMargin.Centimeter -
+                //                               tableWidth.Centimeter) / 2;
+                //table.Rows.LeftIndent = leftIndentToCenterTable;
 
                 // Before you can add a row, you must define the columns
-                Column column = table.AddColumn("4cm");
+                Column column = table.AddColumn("7cm");
                 column.Format.Alignment = ParagraphAlignment.Center;
 
-                column = table.AddColumn("1cm");
-                column.Format.Alignment = ParagraphAlignment.Center;
-
-                column = table.AddColumn("1.2cm");
-                column.Format.Alignment = ParagraphAlignment.Center;
-
-                column = table.AddColumn("1cm");
-                column.Format.Alignment = ParagraphAlignment.Center;
-
-                column = table.AddColumn("1.3cm");
-                column.Format.Alignment = ParagraphAlignment.Center;
-
-                column = table.AddColumn("1.2cm");
-                column.Format.Alignment = ParagraphAlignment.Center;
-
-                column = table.AddColumn("1.2cm");
-                column.Format.Alignment = ParagraphAlignment.Center;
-
-                column = table.AddColumn("1.2cm");
-                column.Format.Alignment = ParagraphAlignment.Center;
-
-                column = table.AddColumn("1.3cm");
-                column.Format.Alignment = ParagraphAlignment.Center;
-
-                column = table.AddColumn("1.2cm");
+                column = table.AddColumn("1.5cm");
                 column.Format.Alignment = ParagraphAlignment.Center;
 
                 column = table.AddColumn("1.7cm");
                 column.Format.Alignment = ParagraphAlignment.Center;
 
-                column = table.AddColumn("1.3cm");
+                column = table.AddColumn("1.5cm");
+                column.Format.Alignment = ParagraphAlignment.Center;
+
+                column = table.AddColumn("1.5cm");
+                column.Format.Alignment = ParagraphAlignment.Center;
+
+                column = table.AddColumn("1.5cm");
+                column.Format.Alignment = ParagraphAlignment.Center;
+
+                column = table.AddColumn("1.5cm");
+                column.Format.Alignment = ParagraphAlignment.Center;
+
+                column = table.AddColumn("1.5cm");
+                column.Format.Alignment = ParagraphAlignment.Center;
+
+                column = table.AddColumn("1.5cm");
+                column.Format.Alignment = ParagraphAlignment.Center;
+
+                column = table.AddColumn("1.5cm");
+                column.Format.Alignment = ParagraphAlignment.Center;
+
+                column = table.AddColumn("2.1cm");
+                column.Format.Alignment = ParagraphAlignment.Center;
+
+                column = table.AddColumn("1.5cm");
                 column.Format.Alignment = ParagraphAlignment.Center;
 
                 // Create the header of the table
@@ -269,10 +249,14 @@ namespace MIGEWebApi.Controllers
                 row.HeadingFormat = true;
                 row.Format.Alignment = ParagraphAlignment.Center;
                 row.Format.Font.Bold = true;
-                row.Format.Font.Size = 7;
+                row.Format.Font.Size = 8;
+                row.TopPadding = 12;
+                row.BottomPadding = 1;
                 row.Shading.Color = TableHeaderColor;
+
                 row.Cells[0].AddParagraph("Business Description");
                 row.Cells[0].Format.Alignment = ParagraphAlignment.Center;
+
                 row.Cells[1].AddParagraph("MAP Class Code");
                 row.Cells[1].Format.Alignment = ParagraphAlignment.Center;
                 row.Cells[2].AddParagraph("ISO GLClass Code");
@@ -294,75 +278,88 @@ namespace MIGEWebApi.Controllers
                 row.Cells[10].AddParagraph("Commericial Auto Symbol");
                 row.Cells[10].Format.Alignment = ParagraphAlignment.Center;
                 row.Cells[11].AddParagraph("Umbrella Symbol");
-                row.Cells[11].Format.Alignment = ParagraphAlignment.Left;
+                row.Cells[11].Format.Alignment = ParagraphAlignment.Center;
 
                 foreach (var bc in chunk)
                 {
-                    row = table.AddRow();
-                    row.Format.Font.Bold = false;
-                    row.Format.Font.Size = 7;
-                    if (row.Index % 2 != 0)
+                    Row datarow = table.AddRow();
+                    datarow.Format.Font.Bold = false;
+                    datarow.Format.Font.Size = 6;
+                    datarow.TopPadding = 3;
+                    datarow.BottomPadding = 3;
+
+                    if (datarow.Index % 2 != 0)
                     {
-                        row.Shading.Color = TableGrey;
+                        datarow.Shading.Color = TableGrey;
                     }
 
-                    row.Cells[0].AddParagraph(bc.DESC);
-                    row.Cells[0].Format.Alignment = ParagraphAlignment.Left;
+                    datarow.Cells[0].AddParagraph(bc.DESC);
+                    datarow.Cells[0].Format.Alignment = ParagraphAlignment.Left;
 
-                    row.Cells[1].AddParagraph(bc.MAPCLS);
-                    row.Cells[1].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[1].AddParagraph(bc.MAPCLS);
+                    datarow.Cells[1].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[2].AddParagraph(bc.CLASX);
-                    row.Cells[2].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[2].AddParagraph(bc.CLASX);
+                    datarow.Cells[2].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[3].AddParagraph((bc.AUTCLS == null) ? "" : bc.AUTCLS);
-                    row.Cells[3].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[3].AddParagraph((bc.AUTCLS == null) ? "" : bc.AUTCLS);
+                    datarow.Cells[3].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[4].AddParagraph((bc.MAPMS == null) ? "" : bc.MAPMS);
-                    row.Cells[4].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[4].AddParagraph((bc.MAPMS == null) ? "" : bc.MAPMS);
+                    datarow.Cells[4].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[5].AddParagraph((bc.MAPDSR == null) ? "" : bc.MAPDSR);
-                    row.Cells[5].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[5].AddParagraph((bc.MAPDSR == null) ? "" : bc.MAPDSR);
+                    datarow.Cells[5].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[6].AddParagraph((bc.AUTDSR == null) ? "" : bc.AUTDSR);
-                    row.Cells[6].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[6].AddParagraph((bc.AUTDSR == null) ? "" : bc.AUTDSR);
+                    datarow.Cells[6].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[7].AddParagraph((bc.PROPDSR == null) ? "" : bc.PROPDSR);
-                    row.Cells[7].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[7].AddParagraph((bc.PROPDSR == null) ? "" : bc.PROPDSR);
+                    datarow.Cells[7].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[8].AddParagraph((bc.GLDSR == null) ? "" : bc.GLDSR);
-                    row.Cells[8].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[8].AddParagraph((bc.GLDSR == null) ? "" : bc.GLDSR);
+                    datarow.Cells[8].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[9].AddParagraph((bc.WCDSR == null) ? "" : bc.WCDSR);
+                    datarow.Cells[9].AddParagraph((bc.WCDSR == null) ? "" : bc.WCDSR);
                     row.Cells[9].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[10].AddParagraph((bc.CAUTDSR == null) ? "" : bc.CAUTDSR);
-                    row.Cells[10].Format.Alignment = ParagraphAlignment.Center;
+                    datarow.Cells[10].AddParagraph((bc.CAUTDSR == null) ? "" : bc.CAUTDSR);
+                    datarow.Cells[10].Format.Alignment = ParagraphAlignment.Center;
 
-                    row.Cells[11].AddParagraph((bc.CUPDSR == null) ? "" : bc.CUPDSR);
-                    row.Cells[11].Format.Alignment = ParagraphAlignment.Left;
+                    datarow.Cells[11].AddParagraph((bc.CUPDSR == null) ? "" : bc.CUPDSR);
+                    datarow.Cells[11].Format.Alignment = ParagraphAlignment.Center;
                    
                 }
                 
                 //
                 page = document.AddPage();
+                page.Orientation = PageOrientation.Landscape;
                 gfx = XGraphics.FromPdfPage(page);
                 gfx.MUH = PdfFontEncoding.Unicode;
+
+                DrawTitle(page, gfx);
 
                 // Create a renderer and prepare (=layout) the document
                 MigraDoc.Rendering.DocumentRenderer docRenderer = new DocumentRenderer(doc);
                 docRenderer.PrepareDocument();                
 
                 // Render the paragraph. You can render tables or shapes the same way.
-                docRenderer.RenderObject(gfx, XUnit.FromCentimeter(1), XUnit.FromCentimeter(1), "12cm", table);
+                docRenderer.RenderObject(gfx, XUnit.FromCentimeter(2), XUnit.FromCentimeter(2), "0cm", table);
 
                 table.SetEdge(0, 0, 12, 1, Edge.Box, BorderStyle.Single, 0.55, Color.Empty);
+
+
             }            
 
         }
 
+        //public void DrawFooter(PdfPage page, XGraphics gfx) {
+
+
+        //}
+
         // ** chunk size here determines the number of pages ** 
-        public static IEnumerable<List<T>>SplitList<T>(List<T> businessclasses, int nSize = 35)
+        public static IEnumerable<List<T>>SplitList<T>(List<T> businessclasses, int nSize = 30)
         {
             for (int i = 0; i < businessclasses.Count; i += nSize)
             {
@@ -371,13 +368,39 @@ namespace MIGEWebApi.Controllers
         }
 
 
-        public void DrawTitle(PdfPage page, XGraphics gfx, string title)
+        public static void DrawTitle(PdfPage page, XGraphics gfx)
         {
-            //string title = "Merchants Risk Appetite Guide";
-            XFont titleFont = new XFont("Verdana", 14, XFontStyle.Bold);
-            XRect rect = new XRect(new XPoint(), gfx.PageSize);
+            
+            const string facename    = "Times New Roman";
+            const string lftnavtitle = "Risk Appetite Guide - Quick Reference (All States)";
+            const string rtnavtitle1 = "Merchants Mutual Insurance Company";
+            const string rtnavtitle2 = "Merchants Preferred Insurance Company";
+            //XPdfFontOptions options = new XPdfFontOptions(PdfFontEncoding.WinAnsi, PdfFontEmbedding.Default);        
+
+            XFont rtnavtitleFont = new XFont(facename, 14, XFontStyle.Italic);
+            XFont lftnavtitleFont = new XFont("Arial", 15, XFontStyle.Regular);
+
+            XRect rect = new XRect(new XPoint(-15,0), gfx.PageSize);
             rect.Inflate(-10, -15);
-            gfx.DrawString(title, titleFont, XBrushes.MidnightBlue, rect, XStringFormats.TopCenter);
+            
+            XRect rect2 = new XRect(new XPoint(-15,15), gfx.PageSize);
+            rect2.Inflate(-10, -15);
+
+            XRect rect3 = new XRect(new XPoint(35,20), gfx.PageSize);
+            
+
+            gfx.DrawString(rtnavtitle1, rtnavtitleFont, XBrushes.DarkSlateGray, rect, XStringFormats.TopRight);
+            gfx.DrawString(rtnavtitle2, rtnavtitleFont, XBrushes.DarkSlateGray, rect2, XStringFormats.TopRight);
+            gfx.DrawString(lftnavtitle, lftnavtitleFont, XBrushes.DarkSlateGray, rect3, XStringFormats.TopLeft);
+
+            //
+            rect.Offset(20, 5);
+            XFont ftrfont = new XFont("Times New Roman", 6, XFontStyle.Regular);
+            XStringFormat format = new XStringFormat();
+            format.Alignment = XStringAlignment.Near;
+            format.LineAlignment = XLineAlignment.Far;
+            gfx.DrawString("Created with BDK & PDFSharp" , ftrfont, XBrushes.DarkSlateGray, rect, format);
+
         }
 
         public class LayoutHelper
@@ -422,6 +445,9 @@ namespace MIGEWebApi.Controllers
                 _currentPosition = _topPosition;
             }
         }
+
+
+
 
         [HttpPost]
         [Route("api/ProxyPostCall")]
