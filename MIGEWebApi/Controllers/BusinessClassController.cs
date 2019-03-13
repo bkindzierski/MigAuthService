@@ -85,7 +85,7 @@ namespace MIGEWebApi.Controllers
                                             COVDSR  = DWXF710.COVDSR,
                                             CUPDSR  = DWXF710.CUPDSR,
                                             RCDID   = DWXF710.RCDID
-                                       }).Take(100).ToList();
+                                       }).ToList();
                 conn.Commit();
             }
 
@@ -160,12 +160,11 @@ namespace MIGEWebApi.Controllers
             //PageSetup ps = new PageSetup();
             //ps.PageWidth = 100;            
             XGraphics gfx;// = XGraphics.FromPdfPage(page);
-            //gfx.MUH = PdfFontEncoding.Unicode;
-
+                          //gfx.MUH = PdfFontEncoding.Unicode;
+            
             // You always need a MigraDoc document for rendering.
             Document doc = new Document();
             Section section = doc.AddSection();
-            
             
             Color TableBorderColor = new Color(0,0,0);
             Color TableHeaderColor = new Color(255, 255, 255);
@@ -183,10 +182,13 @@ namespace MIGEWebApi.Controllers
             //addressFrame.Top = "10.0cm";//irrelevant 
             //addressFrame.RelativeVertical = RelativeVertical.Page;//irrelevant 
             //Table table = addressFrame.AddTable();
+            
 
             //
             var datachunks = SplitList(BusinessClassList);
-            foreach (var chunk in datachunks)
+            var totpages = datachunks.Count();
+            foreach (var chunk in datachunks.Select((value, index) => new { Value = value, Index = index }))
+            //foreach (var chunk in datachunks)
             {
                 //Table table = new Table();
                 Table table = section.AddTable();
@@ -279,8 +281,9 @@ namespace MIGEWebApi.Controllers
                 row.Cells[10].Format.Alignment = ParagraphAlignment.Center;
                 row.Cells[11].AddParagraph("Umbrella Symbol");
                 row.Cells[11].Format.Alignment = ParagraphAlignment.Center;
+                
 
-                foreach (var bc in chunk)
+                foreach (var bc in chunk.Value)
                 {
                     Row datarow = table.AddRow();
                     datarow.Format.Font.Bold = false;
@@ -337,7 +340,9 @@ namespace MIGEWebApi.Controllers
                 gfx = XGraphics.FromPdfPage(page);
                 gfx.MUH = PdfFontEncoding.Unicode;
 
-                DrawTitle(page, gfx);
+               
+
+                DrawTitle(page, gfx, chunk.Index, totpages);
 
                 // Create a renderer and prepare (=layout) the document
                 MigraDoc.Rendering.DocumentRenderer docRenderer = new DocumentRenderer(doc);
@@ -347,7 +352,6 @@ namespace MIGEWebApi.Controllers
                 docRenderer.RenderObject(gfx, XUnit.FromCentimeter(2), XUnit.FromCentimeter(2), "0cm", table);
 
                 table.SetEdge(0, 0, 12, 1, Edge.Box, BorderStyle.Single, 0.55, Color.Empty);
-
 
             }            
 
@@ -359,7 +363,7 @@ namespace MIGEWebApi.Controllers
         //}
 
         // ** chunk size here determines the number of pages ** 
-        public static IEnumerable<List<T>>SplitList<T>(List<T> businessclasses, int nSize = 30)
+        public static IEnumerable<List<T>>SplitList<T>(List<T> businessclasses, int nSize = 29)
         {
             for (int i = 0; i < businessclasses.Count; i += nSize)
             {
@@ -368,7 +372,7 @@ namespace MIGEWebApi.Controllers
         }
 
 
-        public static void DrawTitle(PdfPage page, XGraphics gfx)
+        public static void DrawTitle(PdfPage page, XGraphics gfx, int pageindex, int totalPages)
         {
             
             const string facename    = "Times New Roman";
@@ -387,19 +391,32 @@ namespace MIGEWebApi.Controllers
             rect2.Inflate(-10, -15);
 
             XRect rect3 = new XRect(new XPoint(35,20), gfx.PageSize);
-            
 
             gfx.DrawString(rtnavtitle1, rtnavtitleFont, XBrushes.DarkSlateGray, rect, XStringFormats.TopRight);
             gfx.DrawString(rtnavtitle2, rtnavtitleFont, XBrushes.DarkSlateGray, rect2, XStringFormats.TopRight);
             gfx.DrawString(lftnavtitle, lftnavtitleFont, XBrushes.DarkSlateGray, rect3, XStringFormats.TopLeft);
 
-            //
-            rect.Offset(20, 5);
+
+            //DRAW THE FOOTER
+            rect.Offset(40, -20);
             XFont ftrfont = new XFont("Times New Roman", 6, XFontStyle.Regular);
             XStringFormat format = new XStringFormat();
             format.Alignment = XStringAlignment.Near;
             format.LineAlignment = XLineAlignment.Far;
-            gfx.DrawString("Created with BDK & PDFSharp" , ftrfont, XBrushes.DarkSlateGray, rect, format);
+
+            gfx.DrawString("Risk Appetite Guide - Quick Reference (All States)", ftrfont, XBrushes.DarkSlateGray, rect, format);
+
+            XRect rect4 = new XRect(new XPoint(), gfx.PageSize);
+            rect4.Offset(35, -27);
+            gfx.DrawString("062017 - Proprietary & Confidential", ftrfont, XBrushes.DarkSlateGray, rect4, format);
+
+            //
+            XStringFormat format2 = new XStringFormat();
+            XRect rect5 = new XRect(new XPoint(), gfx.PageSize);
+            rect5.Offset(-45, -33);
+            format2.Alignment = XStringAlignment.Far;
+            format2.LineAlignment = XLineAlignment.Far;
+            gfx.DrawString("page " + (pageindex + 1) + " of " + totalPages  + " pages", ftrfont, XBrushes.DarkSlateGray, rect5, format2);
 
         }
 
