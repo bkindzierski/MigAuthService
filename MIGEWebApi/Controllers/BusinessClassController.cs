@@ -85,7 +85,7 @@ namespace MIGEWebApi.Controllers
                                             COVDSR  = DWXF710.COVDSR,
                                             CUPDSR  = DWXF710.CUPDSR,
                                             RCDID   = DWXF710.RCDID
-                                       }).ToList();
+                                       }).Take(100).ToList();
                 conn.Commit();
             }
 
@@ -311,7 +311,8 @@ namespace MIGEWebApi.Controllers
                     datarow.Cells[4].AddParagraph((bc.MAPMS == null) ? "" : bc.MAPMS);
                     datarow.Cells[4].Format.Alignment = ParagraphAlignment.Center;
 
-                    datarow.Cells[5].AddParagraph((bc.MAPDSR == null) ? "" : bc.MAPDSR);
+                    //datarow.Cells[5].AddParagraph((bc.MAPDSR == null) ? "" : bc.MAPDSR);
+                    datarow.Cells[5].AddImage("images/green-sm.gif");
                     datarow.Cells[5].Format.Alignment = ParagraphAlignment.Center;
 
                     datarow.Cells[6].AddParagraph((bc.AUTDSR == null) ? "" : bc.AUTDSR);
